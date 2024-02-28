@@ -1,19 +1,16 @@
 from dotenv  import load_dotenv
-load_dotenv()
+load_dotenv() # loading envirement variables before load's bot module bc's it needs token in env
+
 from modules.bot import bot,Bot
 import asyncio
 import ssl
 from handlers import dp
-from modules.anvSched import Scheduler
-from wrappers.TrainingWrapper import TrainingWrapper as TW
-import logging
+import logging as l
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 import os
 from aiogram.types import FSInputFile
 from aiogram.types import BotCommand
-
-
 
 # WEB_SERVER_HOST = os.environ['WEB_SERVER_HOST']
 # WEB_SERVER_PORT = os.environ['WEB_SERVER_PORT']
@@ -23,14 +20,20 @@ from aiogram.types import BotCommand
 # BASE_WEBHOOK_URL = f"{WEB_SERVER_HOST}:{WEB_SERVER_PORT}"
 
 def setup_logging():
-        logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        filename="logs.log"
-        )
+    """
+    Setup logging settings
+    """
+    l.basicConfig(
+    level=l.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    filename="logs.log"
+    )
 
 async def setup_bot_commands():
+    """
+    Set basic bot command in bot menu
+    """
     commands = [
         ["status","Текущий статус"],
         ["trainingmenu","Меню тренеровок"],
@@ -48,28 +51,23 @@ async def on_startup(bot: Bot) -> None:
         await bot.set_webhook(f"{BASE_WEBHOOK_URL}{WEBHOOK_PATH}",
             certificate=FSInputFile(WEBHOOK_SSL_CERT),
                 )
-    Scheduler.init(asyncio.get_event_loop())
-    await TW.StartTask()
     await setup_bot_commands()
 
 async def on_shutdown(bot: Bot) -> None:
-    logging.info("bot shutted down")
+    l.info("bot shutted down")
     await bot.delete_webhook(drop_pending_updates=True)
 
 async def polling():
-    logging.info("start with polling")
+    l.info("start with polling")
     setup_logging()
     Scheduler.init(asyncio.get_event_loop())
     await TW.StartTask()
     await setup_bot_commands()
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
-def main() -> None:
+def start_with_webhook():
     
-
-    dp.startup.register(on_startup)
-    dp.shutdown.register(on_shutdown)
-
+    
     app = web.Application()
 
     webhook_requests_handler = SimpleRequestHandler(
@@ -82,19 +80,21 @@ def main() -> None:
 
     setup_application(app, dp, bot=bot)
 
-    # Generate SSL context
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    context.load_cert_chain(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV)
-    
     # And finally start webserver
-    logging.info("started with webhook")
-    web.run_app(app, host="0.0.0.0", port=int(WEB_SERVER_PORT), ssl_context=context)
+    l.info("started with webhook")
+    web.run_app(app, host="0.0.0.0", port=int(WEB_SERVER_PORT))
 
-    
-if __name__ == "__main__":
+
+def main() -> None:
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
+
     setup_logging()
     if os.environ['WEBHOOK'] == "0":
         asyncio.run(polling())
     else:
-        main()
-    logging.info("Start Working")
+        start_with_webhook()        
+    l.info("Start Working")
+    
+if __name__ == "__main__":
+    main()
