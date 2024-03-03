@@ -1,11 +1,22 @@
 version: '3'
 
 services:
-  iskra:
+  dealer:
     restart: always
     env_file: .env
+
     build: 
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/app/Dockerfile
+      
+      args:
+        - 'BOT_TOKEN=$BOT_TOKEN'
+        - 'WEBHOOK=$WEBHOOK'
+        - 'WEB_SERVER_HOST=$WEB_SERVER_HOST'
+        - 'WEB_SERVER_PORT=$WEB_SERVER_PORT'
+        - 'PATH_TO_PEM=$PATH_TO_PEM'
+        - 'PATH_TO_KEY=$PATH_TO_KEY'
+        - 'WEBHOOK_PATH=$WEBHOOK_PATH'
+        
     ports:
       - '443:443'

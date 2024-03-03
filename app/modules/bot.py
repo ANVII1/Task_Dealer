@@ -41,7 +41,7 @@ class dealer_bot:
                 await self.bot.set_webhook(f"{BASE_WEBHOOK_URL}{WEBHOOK_PATH}")                
 
         async def on_shutdown(bot: Bot) -> None:
-            l.info(log_dir + "bot shutted down")
+            l.info(log_dir + "shutted down")
             await bot.delete_webhook(drop_pending_updates=True)
 
         self.dp.startup.register(on_startup)

@@ -9,5 +9,5 @@ log_dir = "Handlers ::: common ::: "
 
 @router.message()
 async def message_handler(msg: Message):
-    l.info(log_dir + "getted new general message")
+    l.info(log_dir + "general message")
     await msg.answer('you say "{0}"'.format(msg.text))
