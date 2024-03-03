@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  iskra:
+    restart: always
+    env_file: .env
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - '443:443'

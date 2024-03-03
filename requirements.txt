@@ -1,4 +1,4 @@
 aiogram
 func-timeout
 asyncio
-#python-dotenv
+python-dotenv

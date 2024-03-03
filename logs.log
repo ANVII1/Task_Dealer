@@ -1,0 +1,9 @@
+2024-03-03 08:41:09 INFO Main ::: Start Working
+2024-03-03 08:41:52 INFO Main ::: Start Working
+2024-03-03 08:44:38 INFO Bot ::: start with polling
+2024-03-03 08:44:38 INFO Start polling
+2024-03-03 08:44:38 INFO Run polling for bot @task_dealer_bot id=7125231537 - 'Task Dealer'
+2024-03-03 08:44:49 INFO Handlers ::: commands ::: random message
+2024-03-03 08:44:49 INFO Update id=720867947 is handled. Duration 289 ms by bot id=7125231537
+2024-03-03 08:44:55 INFO Handlers ::: common ::: getted new general message
+2024-03-03 08:44:55 INFO Update id=720867948 is handled. Duration 100 ms by bot id=7125231537
