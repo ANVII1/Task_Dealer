@@ -7,3 +7,35 @@
 2024-03-03 08:44:49 INFO Update id=720867947 is handled. Duration 289 ms by bot id=7125231537
 2024-03-03 08:44:55 INFO Handlers ::: common ::: getted new general message
 2024-03-03 08:44:55 INFO Update id=720867948 is handled. Duration 100 ms by bot id=7125231537
+2024-03-11 19:52:33 INFO Bot ::: start with polling
+2024-03-11 19:52:33 INFO Start polling
+2024-03-11 19:52:33 INFO Run polling for bot @task_dealer_bot id=7125231537 - 'Task Dealer'
+2024-03-11 19:52:53 INFO handlers ::: commands ::: echo
+2024-03-11 19:52:53 INFO Update id=720867974 is handled. Duration 570 ms by bot id=7125231537
+2024-03-11 19:53:03 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:03 INFO Update id=720867975 is handled. Duration 187 ms by bot id=7125231537
+2024-03-11 19:53:06 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:06 INFO Update id=720867976 is handled. Duration 170 ms by bot id=7125231537
+2024-03-11 19:53:09 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:09 INFO Update id=720867977 is handled. Duration 121 ms by bot id=7125231537
+2024-03-11 19:53:23 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:23 INFO Update id=720867978 is handled. Duration 134 ms by bot id=7125231537
+2024-03-11 19:53:25 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:26 INFO Update id=720867979 is handled. Duration 120 ms by bot id=7125231537
+2024-03-11 19:53:27 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:27 INFO Update id=720867980 is handled. Duration 132 ms by bot id=7125231537
+2024-03-11 19:53:43 INFO Bot ::: start with polling
+2024-03-11 19:53:43 INFO Start polling
+2024-03-11 19:53:43 INFO Run polling for bot @task_dealer_bot id=7125231537 - 'Task Dealer'
+2024-03-11 19:53:49 INFO handlers ::: commands ::: database tested
+2024-03-11 19:53:49 INFO Update id=720867981 is handled. Duration 5574 ms by bot id=7125231537
+2024-03-11 20:27:00 INFO Bot ::: start with polling
+2024-03-11 20:27:01 INFO Start polling
+2024-03-11 20:27:01 INFO Run polling for bot @task_dealer_bot id=7125231537 - 'Task Dealer'
+2024-03-11 20:27:02 INFO handlers ::: commands ::: echo
+2024-03-11 20:27:02 INFO Update id=720867985 is handled. Duration 315 ms by bot id=7125231537
+2024-03-11 20:27:07 INFO handlers ::: commands ::: database tested
+2024-03-11 20:27:13 INFO Update id=720867986 is handled. Duration 8572 ms by bot id=7125231537
+2024-03-11 20:31:01 WARNING Received SIGINT signal
+2024-03-11 20:31:01 INFO Polling stopped for bot @task_dealer_bot id=7125231537 - 'Task Dealer'
+2024-03-11 20:31:01 INFO Polling stopped

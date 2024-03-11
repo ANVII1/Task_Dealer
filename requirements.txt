@@ -2,3 +2,4 @@ aiogram
 func-timeout
 asyncio
 python-dotenv
+pymongo

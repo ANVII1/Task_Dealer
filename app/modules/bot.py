@@ -55,8 +55,6 @@ class dealer_bot:
             self.start_with_webhook()            
         else:
             asyncio.run(self.polling())
-             
-
 
     @classmethod
     async def _setup_bot_commands(self):
@@ -75,7 +73,6 @@ class dealer_bot:
 
         await self.bot.set_my_commands(commands=commandList)
 
-
     @classmethod
     async def polling(self):
         """
@@ -84,7 +81,6 @@ class dealer_bot:
 
         l.info(log_dir + "start with polling")
         await self.dp.start_polling(self.bot, allowed_updates=self.dp.resolve_used_update_types())
-
 
     @classmethod
     def start_with_webhook(self):
