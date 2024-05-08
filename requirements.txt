@@ -1,5 +1,7 @@
 aiogram
-func-timeout
 asyncio
 python-dotenv
+segno
 pymongo
+dateutils
+requests

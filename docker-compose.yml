@@ -1,12 +1,25 @@
 version: '3'
 
 services:
-  dealer:
+  database:
+    restart: unless-stopped
+    image: mongo:latest
+    env_file: .env
+    volumes:
+      -  ./volume:/data/db
+    ports:
+      - '$DB_PORT:$DB_PORT'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME:root
+      - MONGO_INITDB_ROOT_PASSWORD:root
+
+  bot:
     restart: always
     env_file: .env
     build: 
       context: .
-      dockerfile: docker/app/Dockerfile      
+      dockerfile: dockerfiles/bot      
+      target: debug
       args:
         - 'BOT_TOKEN=$BOT_TOKEN'
         - 'WEBHOOK=$WEBHOOK'
@@ -16,19 +29,8 @@ services:
         - 'PATH_TO_KEY=$PATH_TO_KEY'
         - 'WEBHOOK_PATH=$WEBHOOK_PATH'
     environment:
-      - DB_HOST=task_dealer_database_1 # this is a fucking hardcode piece of shit but its works (idk how to fix it)
+      - DB_HOST=Task_Dealer_database_1 # this is a fucking hardcode piece of shit but its works (idk how to fix it)
 
     ports:
       - '443:$WEB_SERVER_PORT'
-
-  database:
-    restart: unless-stopped
-    image: mongo:latest
-    env_file: .env
-    volumes:
-      -  ./data:/data/db
-    ports:
-      - '$DB_PORT:$DB_PORT'
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME:root
-      - MONGO_INITDB_ROOT_PASSWORD:root
+      - '7200:7200' # debug port

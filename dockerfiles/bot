@@ -1,0 +1,77 @@
+FROM python:bookworm as compiler
+
+ARG USER=bot_venv_compiler
+ARG WORKDIR_COMPILER=compiled_venv
+
+WORKDIR /$WORKDIR_COMPILER
+
+RUN useradd $USER --create-home 
+
+RUN chown -R $USER:$USER /$WORKDIR_COMPILER
+
+USER $USER
+
+RUN python3 -m venv venv
+
+# // enable venv
+ENV PATH="/$WORKDIR_COMPILER/venv/bin:$PATH"
+
+COPY requirements.txt .
+
+RUN python3 -m ensurepip &&\
+    python3 -m pip install -r requirements.txt
+
+RUN rm -rf requirements.txt
+
+FROM python:bookworm as base
+
+ARG BOT_TOKEN
+ARG WEBHOOK
+ARG WEB_SERVER_HOST
+ARG WEB_SERVER_PORT
+ARG PATH_TO_PEM
+ARG PATH_TO_KEY
+ARG WEBHOOK_PATH
+ARG DB_HOST
+ARG USER=bot
+ARG WORKDIR=app
+
+ENV BOT_TOKEN $BOT_TOKEN
+ENV WEBHOOK $WEBHOOK
+ENV WEB_SERVER_HOST $WEB_SERVER_HOST
+ENV WEB_SERVER_PORT $WEB_SERVER_PORT
+ENV PATH_TO_PEM $PATH_TO_PEM
+ENV PATH_TO_KEY $PATH_TO_KEY
+ENV WEBHOOK_PATH $WEBHOOK_PATH
+ENV DB_HOST $DB_HOST
+
+WORKDIR /$WORKDIR
+
+RUN useradd $USER --create-home 
+
+RUN chown -R $USER:$USER /$WORKDIR
+
+USER $USER
+
+# // compiled_venv is a vairable (WORKDIR) in compiler, my be have a variant to make shared varible between 2 containers?
+COPY --from=compiler /compiled_venv/ . 
+
+# // COPY ssl_keys . # // You should to do somthing with that shit, no really keys should auto updates 
+
+# // enable venv
+ENV PATH="/$WORKDIR/venv/bin:$PATH"
+
+COPY bot_app .
+
+# // ------------- for debug
+FROM base as debug-compiler
+RUN python3 -m ensurepip &&\
+    python3 -m pip install debugpy
+
+FROM debug-compiler as debug
+ENTRYPOINT [ "python3", "-m", "debugpy", "--listen", "0.0.0.0:7200", "--wait-for-client", "main.py" ]
+
+# // ------------- working 
+FROM base as primary
+
+CMD [ "python3","main.py" ]
