@@ -37,7 +37,7 @@ class CustomLogHandler(StreamHandler):
         try:            
             resp = requests.post(url, params=params )
             if resp.status_code != 200:
-                raise ValueError(f"Code: {resp.status_code} ::: {resp.json()["description"]}")         
+                raise ValueError(f"Code: {resp.status_code} ::: {resp.json()['description']}")         
 
         except Exception as e:
             l.exception(f"Logging ::: message is not sended ::: \n { repr(e) }")

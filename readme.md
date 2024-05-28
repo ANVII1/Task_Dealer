@@ -5,7 +5,7 @@ interface based on telegram bot, powered by aiogram
 
 
 ```bash
-    docker-compose build
+    docker-compose up --build
 ```
 
 also thats my graduate work

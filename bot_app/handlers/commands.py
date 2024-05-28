@@ -3,8 +3,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from modules.logging import logger as l
 from modules.data import UsersCollection
-from modules.scheduler import CreateMessage
 import datetime as dt
+from enums.simple_enum import adresations
 
 log_dir = "handlers-commands "
 
@@ -21,7 +21,7 @@ async def database_test(msg: Message):
        isert me in database
        """
        l.inf(log_dir + "inserted in database")
-       UsersCollection.new(msg.from_user.id,"Anvie")
+       UsersCollection.new(msg.from_user.id,"Anvie",adresations.Developers)
        await msg.answer("you have been added to database")
 
 @router.message(Command("get"))

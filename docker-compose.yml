@@ -29,7 +29,7 @@ services:
         - 'PATH_TO_KEY=$PATH_TO_KEY'
         - 'WEBHOOK_PATH=$WEBHOOK_PATH'
     environment:
-      - DB_HOST=Task_Dealer_database_1 # this is a fucking hardcode piece of shit but its works (idk how to fix it)
+      - DB_HOST=database # task_dealer-database-1 # this is a fucking hardcode piece of shit but its works (idk how to fix it)
 
     ports:
       - '443:$WEB_SERVER_PORT'

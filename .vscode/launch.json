@@ -1,0 +1,25 @@
+{
+    // DEBUGGER CONF VSCODE FOR ISKRA
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Remote Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "justMyCode": false,
+            "connect": {
+                "host": "localhost",
+                "port": 7200
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/bot_app/",
+                    "remoteRoot": "/app"
+                }
+            ]
+            
+            //"env": {"PYTEST_ADDOPTS": "--no-cov"},
+            //"remoteRoot": "${env:LOCAL_WORKSPACE_FOLDER}",                        
+        }
+    ]
+}

@@ -1,4 +1,10 @@
+*.log
+*.pyc 
 .env
-venv
-__pychache__
-*.pyc
+venv/
+.pytest_cache
+#.vscode
+volume
+notes.txt
+src/__pycache__
+ssl_keys

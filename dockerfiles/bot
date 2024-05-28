@@ -1,4 +1,4 @@
-FROM python:bookworm as compiler
+FROM python:3.11.9-bookworm as compiler
 
 ARG USER=bot_venv_compiler
 ARG WORKDIR_COMPILER=compiled_venv
@@ -23,7 +23,7 @@ RUN python3 -m ensurepip &&\
 
 RUN rm -rf requirements.txt
 
-FROM python:bookworm as base
+FROM python:3.11.9-bookworm as base
 
 ARG BOT_TOKEN
 ARG WEBHOOK
