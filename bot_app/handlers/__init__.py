@@ -7,7 +7,9 @@ from utils import envvars
 from modules.logging import logger as l
 
 from handlers import (commands as commands,
-                      common as common
+                      common as common,
+                      newUser as newUser,
+                      newTask as newTask
                       )
 
 dp = Dispatcher(storage=MemoryStorage())
@@ -29,5 +31,6 @@ dp.message.middleware.register(firewall())
 
 dp.include_routers(
     commands.router,
+    newUser.router,
     common.router
     )

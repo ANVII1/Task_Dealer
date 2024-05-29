@@ -69,7 +69,9 @@ RUN python3 -m ensurepip &&\
     python3 -m pip install debugpy
 
 FROM debug-compiler as debug
-ENTRYPOINT [ "python3", "-m", "debugpy", "--listen", "0.0.0.0:7200", "--wait-for-client", "main.py" ]
+
+# "--wait-for-client"
+ENTRYPOINT [ "python3", "-m", "debugpy", "--listen", "0.0.0.0:7200",  "main.py" ] 
 
 # // ------------- working 
 FROM base as primary
