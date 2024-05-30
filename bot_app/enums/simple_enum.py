@@ -8,6 +8,7 @@ class AdresationGroups(str,Enum):
 
 class TaskStates(str,Enum):
     inBacklog = "inBacklog" 
-    inSprintfree = "inSprintfree"
-    inUrgentfree = "inUrgentfree"
-    inProgress = "inProgress"
+    Sprintfree = "inSprintfree"
+    Urgentfree = "inUrgentfree"
+    SprintinProgress = "SprintinProgress"
+    UrgentinProgress = "UrgentinProgress"

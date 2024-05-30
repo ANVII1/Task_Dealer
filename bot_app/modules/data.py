@@ -2,7 +2,7 @@ from pymongo import MongoClient,CursorType
 import utils.envvars as env
 from modules.logging import logger as l
 import datetime as dt
-from enums.simple_enum import AdresationGroups
+from enums.simple_enum import AdresationGroups, TaskStates
 
 log_dir = "modules-data ::: "
 
@@ -96,42 +96,114 @@ class UsersCollection:
 
 class TaskCollection:
     @classmethod
-    def getFreeSprintTasks():
-        ...
+    def getFreeSprintTasks(self,adresation : AdresationGroups):
+        db.tasks.find(
+            {
+                "adresation" : {
+                    "$eq" : adresation
+                },
+                "state": {
+                    "$eq" : TaskStates.Sprintfree
+                }
+            }            
+        )
     
     @classmethod
-    def getFreeUgrentTasks():
+    def getFreeUgrentTasks(self,adresation : AdresationGroups):
+        db.tasks.find(
+                {
+                    "adresation" : {
+                        "$eq" : adresation
+                    },
+                    "state": {
+                        "$eq" : TaskStates.Urgentfree
+                    }
+                }            
+            )
+
+    @classmethod
+    def getUserTasks(self,telegramID : str):
+        return db.tasks.find({"executor" : { "$eq" : telegramID}})
+
+    @classmethod
+    def createUrgentTask(self,name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups):
+        self._createBaseTask(name,description,AuthorTelegramID,adresation,True)
+
+    @classmethod
+    def createSprintTask(self,name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups):
+        self._createBaseTask(name,description,AuthorTelegramID,adresation)
+
+    @classmethod
+    def _createBaseTask(self,name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups,urgent=False):
+        author = db.users.find_one({"telegramID":AuthorTelegramID})
+        typeOfTask = TaskStates.inBacklog if not urgent else TaskStates.Urgentfree
+        db.tasks.insert_one(
+                {
+                    "name":name,
+                    "description": description,
+                    "adresation" : adresation,    
+                    "executor"  : None,
+                    "author"  : author["_id"],
+                    "state" : typeOfTask
+                }
+            )
+
+    @classmethod
+    def closeTask(self,taskID:str):
         ...
 
     @classmethod
-    def getUserTasks(telegramID : str):
-        ...
+    def startSprint(self,selectedTasks:list[Task]):
+        for task in selectedTasks:
+            db.tasks.update_one(
+                {
+                    "_id":task["_id"]
+                },
+                {
+                    "$set": {
+                        "state" : TaskStates.Sprintfree
+                    }
+                }
+            )    
+        
 
     @classmethod
-    def createUrgentTask(name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups):
-        ...
-
-    @classmethod
-    def createSprintTask(name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups):
-        ...
-
-    @classmethod
-    def closeTask(taskID:str):
-        ...
-
-    @classmethod
-    def startSprint(selectedTasks:list[Task]):
-        ...
-
-    @classmethod
-    def closeSprint():
+    def closeSprint(self):
         """
         all tasks wich is not done, move to backlog
         """
         ...
 
+    
     @classmethod
-    def sendTaskOnTest(taskID:str):
-        ...
+    def closeTask(self,taskID:str):
+        """
+        all tasks wich is not done, move to backlog
+        """
+        UnclosedTasks = {
+
+        }
+
+    @classmethod
+    def sendTaskOnTest(self,taskID:str):
+        task = db.tasks.find_one({"_id":taskID})
+        executor = db.users.find_one({"_id":task["executor"]})
+        author = db.users.find_one({"_id":task["author"]}) 
+
+        db.tasks.update_one(
+                {
+                    "_id":taskID
+                },
+                {
+                    "$set": {
+                        "name":task["name"] + " (Тест)",
+                        "description": "Протестировать: \n" + task["description"],
+                        "adresation" : author["adresation"],    
+                        "executor"  : author["_id"],
+                        "author"  : executor["_id"],
+                        "state" : TaskStates.UrgentinProgress
+                    }
+                }
+            )
 
 #endregion

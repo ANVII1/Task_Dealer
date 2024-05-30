@@ -4,3 +4,7 @@ class Registration(StatesGroup):
     name = State()
     adresations = State()
     id = State()
+
+class TaskCreation(StatesGroup):
+    name = State()
+    description = State()

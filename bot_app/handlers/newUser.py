@@ -13,6 +13,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder 
 from aiogram.enums.parse_mode import ParseMode 
 from modules.data import UsersCollection
+from utils.morpher import adresationGroupToName
 
 
 router = Router()
@@ -75,13 +76,8 @@ async def reg_adresation(callback: CallbackQuery, state : FSMContext):
 
     data = SettingAdresationCallback.unpack(callback.data)
     
-    
-    # text = "Новый сотрудник успешно зарегистрирован:\
-    #     **Имя:** {0}\
-    #     **Группа адресации:** {1}\
-    #     **TelegramID:** {2}".format(data.Name,data.Adresation,data.Telegramid)
     UsersCollection.new(data.Telegramid,data.Name,data.Adresation)
 
-    text = "Новый сотрудник успешно зарегистрирован:\nИмя: " + data.Name + "\nГруппа адресации: " + data.Adresation + "\nTelegramID: " + data.Telegramid 
+    text = "Новый сотрудник успешно зарегистрирован:\nИмя: " + data.Name + "\nГруппа адресации: " + adresationGroupToName(data.Adresation) + "\nTelegramID: " + data.Telegramid 
 
     await callback.bot.send_message(callback.from_user.id, text=text,parse_mode=ParseMode.MARKDOWN_V2)
