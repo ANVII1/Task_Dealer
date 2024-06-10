@@ -16,8 +16,6 @@ from modules.data import UsersCollection, TaskCollection
 from utils.morpher import adresationGroupToName
 from handlers.common import message_handler
 
-
-
 router = Router()
    
 log_dir = "Handlers-registration "

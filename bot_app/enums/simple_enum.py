@@ -3,8 +3,8 @@ from enum import Enum
 class AdresationGroups(str,Enum):
     Developers = "dev"
     SysAdmins = "sys"
-    Analysts = "anal"
-    MasterAnalysts = "Manal"
+    Analysts = "analysts"
+    MasterAnalysts = "masteranalysts"
 
 class TaskStates(str,Enum):
     inBacklog = "inBacklog" 
@@ -12,3 +12,4 @@ class TaskStates(str,Enum):
     Urgentfree = "inUrgentfree"
     SprintinProgress = "SprintinProgress"
     UrgentinProgress = "UrgentinProgress"
+    Closed = "ClosedTask"

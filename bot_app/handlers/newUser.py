@@ -7,6 +7,9 @@ from aiogram.types import InlineKeyboardButton, CallbackQuery
 from aiogram.filters.callback_data import CallbackData
 from aiogram import F
 from aiogram import Bot
+router = Router()
+   
+log_dir = "Handlers-registration "
 from enum import Enum
 from callbacks.mainMenu import MainMenuActions, MainMenuCallback 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton

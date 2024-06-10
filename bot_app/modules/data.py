@@ -15,7 +15,7 @@ db = DB_CLIENT.database
 #Region Objects from database
 class db_obj():    
     def __init__(self,_id) -> None:
-        self._id = _id
+        self._id = _id["_uid"] # ///////
 
 # ////////////////////////////////
 
@@ -58,6 +58,14 @@ class Task(db_obj):
 class UsersCollection:
     
     @classmethod
+    def get_all_users(self) -> list[User] | None:
+        cursor = db.users.find()
+        if db.users.count_documents() <= 0:
+            return None
+        
+        return [User(user_cursor) for user_cursor in cursor]
+
+    @classmethod
     def get_by_adresation(self,adresation) -> list[User]:
         
         cursor = db.users.find({"adresation": { "$eq" : adresation } })
@@ -72,7 +80,6 @@ class UsersCollection:
 
         return users
     
-
     @classmethod
     def get_by_tgid(self, telegramID:str)-> User:
         cursor = db.users.find_one( {"telegramID": {"$eq" : telegramID}} )
@@ -81,7 +88,6 @@ class UsersCollection:
             return None
 
         return User(cursor) 
-
 
     @classmethod
     def new(self, telegramID : int ,name : str, adresation : AdresationGroups):
@@ -95,9 +101,38 @@ class UsersCollection:
 
 
 class TaskCollection:
+
     @classmethod
-    def getFreeSprintTasks(self,adresation : AdresationGroups):
-        db.tasks.find(
+    def getTaskOnExecute(self,taskID:str,userTGID:str):
+        db.tasks.update_one({"_id":taskID},{"$set":{"executor" : userTGID }})
+
+    @classmethod
+    def getCurrntTask(self,taskID:str):
+        task_cursor = db.tasks.find_one({"_id": {"$eq" : taskID}})
+        if task_cursor is None:
+            return None
+        
+        return Task(task_cursor)
+
+    @classmethod
+    def getBacklogTasks(self) -> list[Task] | None:
+        tasks_cursor = db.tasks.find(
+            {
+                "state": {
+                    "$eq" : TaskStates.inBacklog
+                }
+            }            
+        )
+
+        if tasks_cursor is None:
+            return None
+
+        tasks_array = [Task(task_element) for task_element in tasks_cursor]
+        return tasks_array
+
+    @classmethod
+    def getFreeSprintTasks(self,adresation : AdresationGroups) -> list[Task] | None:
+        tasks_cursor = db.tasks.find(
             {
                 "adresation" : {
                     "$eq" : adresation
@@ -107,23 +142,39 @@ class TaskCollection:
                 }
             }            
         )
+
+        if tasks_cursor is None:
+            return None
+
+        tasks_array = [Task(task_element) for task_element in tasks_cursor]
+        return tasks_array
     
     @classmethod
-    def getFreeUgrentTasks(self,adresation : AdresationGroups):
-        db.tasks.find(
-                {
-                    "adresation" : {
-                        "$eq" : adresation
-                    },
-                    "state": {
-                        "$eq" : TaskStates.Urgentfree
+    def getFreeUgrentTasks(self,adresation : AdresationGroups) -> list[Task] | None:
+        tasks_cursor = db.tasks.find({
+                    "$and" : {
+                        "adresation" : {
+                            "$eq" : adresation
+                        },
+                        "state": {
+                            "$eq" : TaskStates.Urgentfree
+                        }
                     }
-                }            
-            )
+                })
+        
+        if tasks_cursor is None:
+            return None
+
+        tasks_array = [Task(task_element) for task_element in tasks_cursor]
+        return tasks_array
 
     @classmethod
-    def getUserTasks(self,telegramID : str):
-        return db.tasks.find({"executor" : { "$eq" : telegramID}})
+    def getUserTasks(self,telegramID : str) -> list[Task] | None:
+        tasks_cursor = db.tasks.find({"executor" : { "$eq" : telegramID}})
+        tasks_array = [Task(task_element) for task_element in tasks_cursor]
+        if tasks_cursor is None:
+            return None
+        return tasks_array
 
     @classmethod
     def createUrgentTask(self,name : str, description : str, AuthorTelegramID : str, adresation : AdresationGroups):
@@ -139,18 +190,14 @@ class TaskCollection:
         typeOfTask = TaskStates.inBacklog if not urgent else TaskStates.Urgentfree
         db.tasks.insert_one(
                 {
-                    "name":name,
-                    "description": description,
+                    "name" : name,
+                    "description" : description,
                     "adresation" : adresation,    
                     "executor"  : None,
                     "author"  : author["_id"],
                     "state" : typeOfTask
                 }
             )
-
-    @classmethod
-    def closeTask(self,taskID:str):
-        ...
 
     @classmethod
     def startSprint(self,selectedTasks:list[Task]):
@@ -166,23 +213,33 @@ class TaskCollection:
                 }
             )    
         
-
     @classmethod
     def closeSprint(self):
         """
         all tasks wich is not done, move to backlog
         """
-        ...
-
+        db.tasks.update_many(
+                {
+                    "state" : {
+                        "$or" : [
+                                {"$eq" : TaskStates.Sprintfree}, 
+                                {"$eq" : TaskStates.SprintinProgress}
+                            ]
+                        }
+                },
+                {
+                    "$set" : {
+                        "state" : TaskStates.inBacklog
+                        }
+                }
+            )
     
     @classmethod
     def closeTask(self,taskID:str):
         """
         all tasks wich is not done, move to backlog
         """
-        UnclosedTasks = {
-
-        }
+        db.tasks.update_one({"taskID" : {"$eq" : taskID}})
 
     @classmethod
     def sendTaskOnTest(self,taskID:str):
@@ -205,5 +262,14 @@ class TaskCollection:
                     }
                 }
             )
+            
+
+    @classmethod
+    def isSprintRunning(self) -> bool:
+        cursor = db.tasks.count_documents()
+        if cursor is 0:
+            return False
+        
+        return True
 
 #endregion

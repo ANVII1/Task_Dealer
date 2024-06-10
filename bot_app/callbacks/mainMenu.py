@@ -8,6 +8,8 @@ class MainMenuActions(str,Enum):
     urgentTasks = "urgentTasks"
     sprintTasks = "sprintTasks"
     myTasks = "myTasks"
+    start = "start"
+    sprintMenu = "sprintMenu"
 
 class MainMenuCallback(CallbackData,prefix="main"):
     Navigation: MainMenuActions

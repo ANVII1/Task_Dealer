@@ -31,6 +31,7 @@ dp.message.middleware.register(firewall())
 
 dp.include_routers(
     commands.router,
+    newTask.router,
     newUser.router,
-    common.router
+    common.router,
     )
